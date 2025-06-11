@@ -8,12 +8,12 @@ def get_file_content(working_directory,file_path)->str:
        return err
 
     try:
-        if os.path.getsize(file_path) > MAX_CHARS:
+        if os.path.getsize(file) > MAX_CHARS:
             with open(file_path, 'r') as file:
                 content = file.read(MAX_CHARS)
                 return content + f'\n[...File "{file}" truncated at "{MAX_CHARS}" characters]\n'
         else:
-            with open(file_path, 'r') as file:
+            with open(file, 'r') as file:
                 content = file.read()
                 return content
     except Exception as e:
