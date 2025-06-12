@@ -55,12 +55,18 @@ def generate_content(client, messages, verbose) -> tuple[bool, str]:
                 messages.append(candidate.content)
 
     if response.function_calls:
-        for call in response.function_calls:
-            function_call_result = call_function(call, verbose)
-            # result = parse_result(function_call_result)  # Removed unused variable assignment
-            messages.append(function_call_result)  # Fixed - append the Content object, not parsed result
-            if verbose:
-                verbose_flag(call, function_call_result)
+      function_results = []  # Collect all results first
+
+      for call in response.function_calls:
+          function_call_result = call_function(call, verbose)
+          function_results.append(function_call_result.parts[0])  # Add to collection
+          if verbose:
+              verbose_flag(call, function_call_result, response)
+
+      # Add all results as one combined message
+      if function_results:
+          combined_result = types.Content(role="user", parts=function_results)
+          messages.append(combined_result)
 
     final_response = response.text
     should_continue = bool(response.function_calls)
