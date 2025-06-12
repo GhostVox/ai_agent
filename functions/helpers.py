@@ -5,8 +5,6 @@ def check_file_path(working_directory: str, file_path: str) -> tuple[str, Err | 
     working_directory_path = os.path.abspath(working_directory)
     full_file_path = os.path.join(working_directory_path, file_path)
     abs_file_path = os.path.abspath(full_file_path)
-
-    # Add os.sep to prevent partial matches and handle exact match case
     if not (abs_file_path.startswith(working_directory_path + os.sep) or abs_file_path == working_directory_path):
         err = f'Error: Cannot read "{file_path}" as it is outside the permitted working directory'
         return "", err
